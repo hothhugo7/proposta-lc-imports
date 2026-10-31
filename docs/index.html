@@ -15,8 +15,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;font-variant-numeric:lining-nums}
 html,body{height:100%;background:var(--ink);color:var(--bone);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden}
-#viewport{position:fixed;inset:0;display:grid;place-items:center}
-#deck{width:1920px;height:1080px;position:relative;transform-origin:center center;flex:none}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#deck{width:1920px;height:1080px;position:absolute;left:50%;top:50%;transform-origin:center center}
 .slide{position:absolute;inset:0;overflow:hidden;background:var(--ink);padding:110px 140px;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
 .slide.active{opacity:1;visibility:visible}
 .slide .rise{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
@@ -574,7 +574,7 @@ table.cmp{width:100%;border-collapse:collapse;margin-top:44px}
 <script>
 const slides=[...document.querySelectorAll('.slide')],deck=document.getElementById('deck');
 let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));
-function fit(){deck.style.transform=`scale(${Math.min(innerWidth/1920,innerHeight/1080)})`}
+function fit(){deck.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/1920,innerHeight/1080)})`}
 function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
   document.getElementById('count').textContent=String(i+1).padStart(2,'0')+' / '+slides.length;
   document.getElementById('progress').style.width=((i+1)/slides.length*100)+'%';history.replaceState(null,'','#'+(i+1))}
