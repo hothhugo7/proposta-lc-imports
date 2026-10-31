@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LC Imports — Proposta Hoth Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#06080C; --ink9:#090D14; --ink8:#0E1520; --ink7:#15202F;
+  --bone:#EEF3F8; --mute:rgba(238,243,248,.56); --faint:rgba(238,243,248,.32);
+  --line:rgba(238,243,248,.12); --azure:#1E7BB0; --soft:#7DBCE2; --deep:#0B3A5C;
+  --serif:"Cormorant Garamond",Georgia,serif; --sans:"Inter",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-variant-numeric:lining-nums}
+html,body{height:100%;background:var(--ink);color:var(--bone);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden}
+#viewport{position:fixed;inset:0;display:grid;place-items:center}
+#deck{width:1920px;height:1080px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;overflow:hidden;background:var(--ink);padding:110px 140px;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
+.slide.active{opacity:1;visibility:visible}
+.slide .rise{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.slide.active .rise{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.12s}.slide.active .d2{transition-delay:.24s}.slide.active .d3{transition-delay:.36s}.slide.active .d4{transition-delay:.48s}
+
+/* chrome */
+.top{position:absolute;top:56px;left:140px;right:140px;display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--faint)}
+.top b{font-weight:500;color:var(--mute)}
+.foot{position:absolute;bottom:52px;left:140px;right:140px;display:flex;justify-content:space-between;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint)}
+.eyebrow{font-size:15px;letter-spacing:.34em;text-transform:uppercase;color:var(--soft);margin-bottom:34px;display:flex;align-items:center;gap:18px}
+.eyebrow::before{content:"";width:44px;height:1px;background:var(--soft)}
+h1,h2{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.02}
+h2{font-size:84px}
+h2 em,h1 em{font-style:italic;color:var(--soft)}
+.lead{font-size:24px;line-height:1.6;color:var(--mute);font-weight:300;max-width:680px}
+.small{font-size:16px;line-height:1.6;color:var(--faint)}
+.tag{display:inline-block;font-size:13px;letter-spacing:.24em;text-transform:uppercase;border:1px solid var(--line);padding:10px 18px;border-radius:99px;color:var(--mute)}
+.photo{position:absolute;background-size:cover;background-position:center}
+.glow{position:absolute;border-radius:50%;filter:blur(140px);pointer-events:none}
+
+/* 01 cover */
+#s1{padding:0}
+#s1 .photo{right:0;top:0;bottom:0;width:62%;filter:grayscale(.15) contrast(1.05)}
+#s1 .shade{position:absolute;inset:0;background:linear-gradient(90deg,var(--ink) 38%,rgba(6,8,12,.86) 52%,rgba(6,8,12,.25) 78%,rgba(6,8,12,.55)),linear-gradient(0deg,var(--ink),transparent 35%)}
+#s1 .inner{position:absolute;left:140px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;width:900px}
+#s1 .logo{width:120px;margin-bottom:64px;opacity:.95}
+#s1 h1{font-size:184px;letter-spacing:.02em;line-height:.9}
+#s1 .sub{font-family:var(--serif);font-style:italic;font-size:46px;color:var(--bone);margin-top:34px}
+#s1 .comp{margin-top:30px;font-size:20px;letter-spacing:.06em;color:var(--mute);font-weight:300}
+.sign{font-size:14px;letter-spacing:.38em;text-transform:uppercase;color:var(--mute)}
+.sign b{color:var(--bone);font-weight:600}
+
+/* 02 */
+#s2 .photo{right:0;top:0;bottom:0;width:40%;opacity:.38;filter:grayscale(1)}
+#s2 .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ink),rgba(6,8,12,.2) 60%,rgba(6,8,12,.7))}
+#s2 .grid{display:grid;grid-template-columns:900px 1fr;gap:120px;height:100%;align-items:center;position:relative}
+.nlist{list-style:none;border-top:1px solid var(--line)}
+.nlist li{display:grid;grid-template-columns:64px 1fr;padding:26px 0;border-bottom:1px solid var(--line);font-size:24px;font-weight:300;align-items:baseline}
+.nlist li span{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:24px}
+
+/* 03 flow */
+#s3 h2{font-size:76px;max-width:1300px}
+.flow{display:flex;align-items:center;margin-top:96px;position:relative}
+.flow .node{flex:none;display:flex;flex-direction:column;align-items:center;gap:22px;width:150px}
+.flow .dot{width:84px;height:84px;border-radius:50%;border:1px solid rgba(125,188,226,.45);display:grid;place-items:center;background:radial-gradient(circle,rgba(30,123,176,.22),transparent 70%)}
+.flow .dot svg{width:30px;height:30px;stroke:var(--bone);fill:none;stroke-width:1.3}
+.flow .node:last-child .dot{background:var(--azure);border-color:var(--azure)}
+.flow .lbl{font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:var(--mute)}
+.flow .link{flex:1;height:1px;background:linear-gradient(90deg,rgba(125,188,226,.6),rgba(125,188,226,.15));margin:0 6px 46px;position:relative}
+.flow .link::after{content:"";position:absolute;right:-1px;top:-3px;width:7px;height:7px;border-top:1px solid var(--soft);border-right:1px solid var(--soft);transform:rotate(45deg)}
+.mgmt{margin-top:70px;border:1px solid var(--line);border-radius:22px;padding:40px 48px;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:56px;background:linear-gradient(180deg,rgba(14,21,32,.7),rgba(9,13,20,.3))}
+.mgmt h4{font-family:var(--serif);font-weight:400;font-size:34px;margin-bottom:12px}
+.mgmt p{font-size:18px;line-height:1.6;color:var(--mute);font-weight:300}
+.mgmt .k{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--soft);margin-bottom:14px}
+
+/* phones */
+.phone{width:330px;height:680px;border-radius:54px;background:#0b0d11;padding:12px;box-shadow:0 0 0 1.5px #2a2f38,0 0 0 4px #0b0d11,0 0 0 5px #3a404b,0 60px 120px rgba(0,0,0,.7);position:relative;flex:none}
+.phone .scr{width:100%;height:100%;border-radius:43px;overflow:hidden;background:var(--ink);position:relative}
+.phone .isl{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:96px;height:28px;border-radius:20px;background:#000;z-index:5}
+.app-bar{display:flex;justify-content:space-between;align-items:center;padding:52px 20px 12px;font-size:10px;letter-spacing:.2em;color:var(--mute)}
+.app-bar img{width:34px}
+.app-hero{height:300px;margin:0 12px;border-radius:20px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.app-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,8,12,.95),transparent 60%)}
+.app-hero div{position:absolute;left:18px;bottom:18px;z-index:2}
+.app-hero small{font-size:8px;letter-spacing:.3em;color:var(--soft);text-transform:uppercase}
+.app-hero p{font-family:var(--serif);font-size:30px;line-height:1;margin-top:6px}
+.app-hero i{display:inline-block;margin-top:12px;font-style:normal;font-size:8px;letter-spacing:.2em;background:var(--bone);color:var(--ink);padding:7px 12px;border-radius:99px}
+.chips{display:flex;gap:6px;padding:16px 12px 10px}
+.chips span{font-size:8px;letter-spacing:.14em;border:1px solid var(--line);border-radius:99px;padding:6px 10px;color:var(--mute)}
+.chips span:first-child{background:var(--azure);border-color:var(--azure);color:#fff}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px}
+.cards div{height:150px;border-radius:14px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.cards div::after{content:attr(data-n);position:absolute;left:0;right:0;bottom:0;padding:22px 9px 8px;font-size:8px;background:linear-gradient(0deg,rgba(6,8,12,.9),transparent);letter-spacing:.06em}
+.pdp-img{height:380px;background-size:cover;background-position:center}
+.pdp{padding:18px 20px}
+.pdp small{font-size:8px;letter-spacing:.28em;color:var(--soft);text-transform:uppercase}
+.pdp p{font-family:var(--serif);font-size:28px;margin:6px 0 10px}
+.sizes{display:flex;gap:6px;margin:12px 0 16px}
+.sizes span{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;font-size:9px;color:var(--mute)}
+.sizes span:nth-child(2){border-color:var(--bone);color:var(--bone)}
+.btn{background:var(--bone);color:var(--ink);text-align:center;font-size:9px;letter-spacing:.24em;padding:14px;border-radius:99px;font-weight:600}
+
+/* 04 */
+#s4 .wrap{display:grid;grid-template-columns:760px 1fr;gap:80px;height:100%;align-items:center}
+#s4 h2{font-size:74px}
+.attrs{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin-top:56px;border-top:1px solid var(--line)}
+.attrs div{padding:20px 0;border-bottom:1px solid var(--line);font-size:20px;font-weight:300;color:var(--bone);display:flex;gap:14px;align-items:center}
+.attrs div::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--soft);flex:none}
+.phones{position:relative;display:flex;justify-content:center;align-items:center;gap:44px;height:100%}
+.phones .phone:nth-child(2){transform:translateY(60px)}
+.note{position:absolute;bottom:52px;right:140px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;gap:10px;align-items:center}
+.note::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--azure);box-shadow:0 0 0 4px rgba(30,123,176,.25)}
+
+/* 05/06 packages */
+.pkg{display:grid;grid-template-columns:620px 1fr;gap:110px;height:100%;align-items:center}
+.pkg .num{font-family:var(--serif);font-size:260px;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(125,188,226,.35);margin-bottom:28px}
+.pkg h2{font-size:80px}
+.pkg h2 small{display:block;font-family:var(--serif);font-style:italic;font-size:40px;color:var(--mute);margin-top:18px;line-height:1.2}
+.pkg .meta{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+.items{columns:2;column-gap:56px;border-top:1px solid var(--line)}
+.items li{list-style:none;break-inside:avoid;padding:17px 0 17px 34px;border-bottom:1px solid var(--line);font-size:19px;font-weight:300;line-height:1.4;position:relative}
+.items li::before{content:"";position:absolute;left:0;top:27px;width:14px;height:1px;background:var(--soft)}
+.callout{margin-top:40px;display:flex;gap:26px;align-items:flex-start;padding:28px 34px;border-radius:18px;background:rgba(30,123,176,.1);border:1px solid rgba(125,188,226,.22);font-size:19px;line-height:1.55;font-weight:300}
+.callout b{font-weight:500;color:var(--soft)}
+#s6 .photo{left:0;top:0;bottom:0;width:30%;opacity:.3;filter:grayscale(1)}
+#s6 .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,8,12,.3),var(--ink))}
+#s6 .pkg{grid-template-columns:560px 1fr;position:relative}
+.fine{margin-top:28px;font-size:15px;line-height:1.6;color:var(--faint)}
+
+/* 07 training */
+#s7 .wrap{display:grid;grid-template-columns:1fr 820px;gap:100px;height:100%;align-items:center}
+.learn{list-style:none;margin-top:50px;counter-reset:l}
+.learn li{counter-increment:l;display:flex;gap:26px;align-items:baseline;padding:14px 0;font-size:23px;font-weight:300}
+.learn li::before{content:counter(l,decimal-leading-zero);font-size:13px;letter-spacing:.2em;color:var(--soft);width:30px}
+.dash{border-radius:22px;border:1px solid var(--line);background:linear-gradient(180deg,var(--ink8),var(--ink9));padding:30px;box-shadow:0 60px 140px rgba(0,0,0,.6);position:relative}
+.dash .bar{display:flex;gap:8px;margin-bottom:26px}.dash .bar i{width:10px;height:10px;border-radius:50%;background:var(--ink7)}
+.dash .row{display:grid;grid-template-columns:180px 1fr;gap:24px}
+.side div{height:14px;border-radius:6px;background:var(--ink7);margin-bottom:18px}
+.side div:nth-child(2){background:rgba(30,123,176,.5);width:80%}
+.side div:nth-child(odd){width:70%}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.kpis div{border:1px solid var(--line);border-radius:14px;padding:16px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.kpis div b{display:block;height:20px;width:60%;border-radius:5px;background:var(--ink7);margin-top:14px}
+.tbl div{display:grid;grid-template-columns:54px 1fr 90px 80px;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.tbl div span{height:10px;border-radius:5px;background:var(--ink7)}
+.tbl div em{width:54px;height:54px;border-radius:10px;background-size:cover;background-position:center}
+.tbl div i{height:22px;border-radius:99px;background:rgba(30,123,176,.25);border:1px solid rgba(125,188,226,.3)}
+.badge{position:absolute;top:-16px;right:30px;background:var(--bone);color:var(--ink);font-size:11px;letter-spacing:.24em;text-transform:uppercase;padding:9px 16px;border-radius:99px;font-weight:600}
+
+/* 08 */
+#s8 .wrap{display:grid;grid-template-columns:780px 1fr;gap:110px;height:100%;align-items:center}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.tiles div{background:var(--ink);padding:38px 36px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
+.tiles div span{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:22px}
+.tiles div p{font-size:22px;font-weight:300;line-height:1.35}
+.spark{display:flex;align-items:flex-end;gap:5px;height:36px;margin:8px 0}
+.spark i{flex:1;background:linear-gradient(0deg,rgba(30,123,176,.25),rgba(125,188,226,.7));border-radius:2px}
+
+/* 09 table */
+#s9 h2{font-size:66px}
+table.cmp{width:100%;border-collapse:collapse;margin-top:44px}
+.cmp th{text-align:left;font-weight:400;padding:0 28px 22px;vertical-align:bottom}
+.cmp th .p{font-family:var(--serif);font-size:40px;color:var(--bone)}
+.cmp th .s{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--soft);display:block;margin-bottom:8px}
+.cmp td{padding:13.5px 28px;border-top:1px solid var(--line);font-size:18px;font-weight:300;color:var(--mute)}
+.cmp td:first-child{color:var(--bone);font-weight:400;padding-left:0;width:440px;font-size:17px;letter-spacing:.02em}
+.cmp td:nth-child(2),.cmp th:nth-child(2){background:rgba(238,243,248,.025)}
+.cmp td:nth-child(3),.cmp th:nth-child(3){background:rgba(30,123,176,.07)}
+.cmp tr.fit td{border-top:1px solid rgba(125,188,226,.4);color:var(--bone);font-family:var(--serif);font-style:italic;font-size:24px;padding-top:20px;padding-bottom:20px}
+.cmp tr.fit td:first-child{font-family:var(--sans);font-style:normal;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--soft)}
+.ck{color:var(--soft);margin-right:8px}
+
+/* 10/11 price */
+.price{display:grid;grid-template-columns:1fr 820px;gap:100px;height:100%;align-items:center;position:relative}
+.price h2{font-size:80px}
+.price .pk{font-size:14px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute);margin-top:44px;padding-top:26px;border-top:1px solid var(--line)}
+.price .pk b{display:block;font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:0;text-transform:none;color:var(--bone);margin-top:10px}
+.incl{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.card{border-radius:30px;padding:56px 60px;background:linear-gradient(160deg,rgba(30,123,176,.28),rgba(11,58,92,.18) 40%,rgba(9,13,20,.9));border:1px solid rgba(125,188,226,.28);position:relative;overflow:hidden;box-shadow:0 60px 140px rgba(0,0,0,.55)}
+.card .l{font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--soft)}
+.card .big{display:flex;align-items:baseline;gap:16px;margin:10px 0 0}
+.card .big sup{font-size:30px;font-family:var(--serif);color:var(--mute)}
+.card .big span{font-family:var(--serif);font-size:150px;line-height:1;letter-spacing:-.02em}
+.card .plus{display:flex;align-items:center;gap:20px;margin:30px 0 26px;color:var(--faint);font-size:13px;letter-spacing:.3em;text-transform:uppercase}
+.card .plus::before,.card .plus::after{content:"";flex:1;height:1px;background:var(--line)}
+.card .inst{display:flex;align-items:baseline;gap:18px}
+.card .inst .x{font-family:var(--serif);font-size:64px;color:var(--soft);font-style:italic}
+.card .inst .v{font-family:var(--serif);font-size:110px;line-height:1}
+.card .inst .v sup{font-size:28px;color:var(--mute);margin-right:10px;vertical-align:super}
+.card .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:40px;padding-top:28px;border-top:1px solid rgba(125,188,226,.25)}
+.card .total span{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute)}
+.card .total b{font-family:var(--serif);font-weight:500;font-size:52px}
+.card .split{font-size:15px;color:var(--faint);margin-top:8px;line-height:1.6}
+.card .fin{font-size:14px;color:var(--faint);margin-top:18px;line-height:1.6}
+
+/* 12 */
+.costs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:56px}
+.costs div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 30px 34px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+.costs div span{font-size:12px;letter-spacing:.28em;color:var(--faint)}
+.costs div p{font-size:21px;font-weight:300;line-height:1.35}
+.costs div.ev{background:rgba(30,123,176,.08)}
+.costs div.ev span{color:var(--soft)}
+.legend{display:flex;gap:40px;margin-top:28px;font-size:15px;color:var(--mute)}
+.legend i{display:inline-block;width:14px;height:14px;border:1px solid var(--line);margin-right:12px;vertical-align:-2px}
+.legend i.ev{background:rgba(30,123,176,.25);border-color:rgba(125,188,226,.4)}
+
+/* 13 */
+#s13 .photo{inset:0;opacity:.16;filter:grayscale(1)}
+#s13 .photo::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,transparent,var(--ink) 70%)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:70px;position:relative}
+.steps div{padding:34px 40px 0 0;border-top:1px solid var(--line);position:relative}
+.steps div::before{content:"";position:absolute;top:-6px;left:0;width:11px;height:11px;border-radius:50%;background:var(--ink);border:1px solid var(--soft)}
+.steps div:first-child::before{background:var(--soft)}
+.steps span{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--soft)}
+.steps p{font-size:23px;font-weight:300;line-height:1.4;margin-top:14px}
+.cta{margin-top:110px;display:flex;justify-content:space-between;align-items:flex-end}
+.cta h3{font-family:var(--serif);font-weight:400;font-size:86px;line-height:1}
+.cta h3 em{color:var(--soft)}
+.sig{text-align:right}
+.sig .n{font-size:16px;letter-spacing:.42em;text-transform:uppercase;font-weight:600}
+.sig .t{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--mute);margin-top:10px}
+
+/* nav */
+#ui{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:10;font:12px var(--sans);letter-spacing:.2em;color:var(--faint);background:rgba(9,13,20,.7);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:99px;padding:6px 8px}
+#ui button{background:none;border:0;color:var(--bone);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px}
+#ui button:hover{background:var(--ink7)}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--azure);z-index:10;transition:width .5s}
+
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;height:auto}
+  #viewport{position:static;display:block}
+  #deck{transform:none!important;width:auto;height:auto}
+  .slide{position:relative;width:1920px;height:1080px;opacity:1;visibility:visible;page-break-after:always;break-after:page}
+  .slide .rise{opacity:1;transform:none}
+  #ui,#progress{display:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 01 CAPA -->
+<section class="slide" id="s1">
+  <div class="photo" style="background-image:url(assets/bmw-trio.jpg)"></div>
+  <div class="shade"></div>
+  <div class="glow" style="width:700px;height:700px;left:-200px;bottom:-300px;background:rgba(30,123,176,.25)"></div>
+  <div class="inner">
+    <img class="logo rise" src="assets/logo.png" alt="LC Imports">
+    <h1 class="rise d1">LC IMPORTS</h1>
+    <p class="sub rise d2">Sua marca. Uma nova experiência digital.</p>
+    <p class="comp rise d3">Proposta de implantação e estruturação de e-commerce</p>
+  </div>
+  <div class="foot" style="left:140px"><span class="sign">Apresentado por <b>Hoth Solutions</b></span><span>Proposta comercial · 2026</span></div>
+</section>
+
+<!-- 02 OPORTUNIDADE -->
+<section class="slide" id="s2">
+  <div class="photo" style="background-image:url(assets/jordan-circle.jpg)"></div>
+  <div class="top"><span><b>01</b> &nbsp; A oportunidade</span><span>LC Imports × Hoth Solutions</span></div>
+  <div class="grid">
+    <div>
+      <div class="eyebrow rise">A oportunidade</div>
+      <h2 class="rise d1">Uma marca forte merece uma presença digital <em>à altura.</em></h2>
+      <p class="lead rise d2" style="margin-top:40px">Um canal próprio reúne vitrine, compra e atendimento em um só lugar — com a identidade da LC Imports em cada detalhe.</p>
+    </div>
+    <ul class="nlist rise d3">
+      <li><span>i.</span>Um ambiente próprio para apresentar a marca</li>
+      <li><span>ii.</span>Produtos e pedidos organizados</li>
+      <li><span>iii.</span>Uma jornada de compra profissional</li>
+      <li><span>iv.</span>Mais controle sobre a experiência comercial</li>
+      <li><span>v.</span>Base pronta para futuras ações de marketing</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03 VISÃO -->
+<section class="slide" id="s3">
+  <div class="top"><span><b>02</b> &nbsp; A visão</span><span>LC Imports × Hoth Solutions</span></div>
+  <div style="margin-top:60px">
+    <div class="eyebrow rise">A visão da Hoth Solutions</div>
+    <h2 class="rise d1">Mais do que uma loja. <em>Uma estrutura para vender e gerir.</em></h2>
+  </div>
+  <div class="flow rise d2">
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></div><div class="lbl">Visitante</div></div><div class="link"></div>
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><path d="M8 3 4 6l2 4 2-1v12h8V9l2 1 2-4-4-3c0 2-2 3-4 3S8 5 8 3z"/></svg></div><div class="lbl">Produto</div></div><div class="link"></div>
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1.5 12h-11z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div><div class="lbl">Carrinho</div></div><div class="link"></div>
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></div><div class="lbl">Pagamento</div></div><div class="link"></div>
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 11h6M9 15h6"/></svg></div><div class="lbl">Pedido</div></div><div class="link"></div>
+    <div class="node"><div class="dot"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></div><div class="lbl">Envio</div></div>
+  </div>
+  <div class="mgmt rise d3">
+    <div><div class="k">Para o cliente</div><h4>Experiência de compra</h4><p>Navegação clara, produtos bem apresentados e um checkout sem fricção.</p></div>
+    <div><div class="k">Para o negócio</div><h4>Gestão da operação</h4><p>Pedidos, estoque e pagamentos acompanhados em um painel organizado.</p></div>
+    <div style="border-left:1px solid var(--line);padding-left:56px;display:flex;align-items:center"><p style="font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.3;color:var(--bone)">A Hoth Solutions trabalha as duas pontas: a vitrine que o cliente vê e a estrutura que sustenta cada venda.</p></div>
+  </div>
+</section>
+
+<!-- 04 EXPERIÊNCIA -->
+<section class="slide" id="s4">
+  <div class="top"><span><b>03</b> &nbsp; Experiência</span><span>LC Imports × Hoth Solutions</span></div>
+  <div class="glow" style="width:800px;height:800px;right:100px;top:100px;background:rgba(30,123,176,.22)"></div>
+  <div class="wrap" style="position:relative">
+    <div>
+      <div class="eyebrow rise">Experiência LC Imports</div>
+      <h2 class="rise d1">Uma experiência pensada para <em>valorizar cada produto.</em></h2>
+      <div class="attrs rise d2">
+        <div>Identidade visual personalizada</div><div>Fundo escuro, tipografia clara</div>
+        <div>Animações sofisticadas</div><div>Navegação intuitiva</div>
+        <div>Layout mobile-first</div><div>Fotos de produto valorizadas</div>
+        <div>Categorias organizadas</div><div>Compra clara e objetiva</div>
+      </div>
+    </div>
+    <div class="phones rise d3">
+      <div class="phone"><div class="isl"></div><div class="scr">
+        <div class="app-bar"><span>MENU</span><img src="assets/logo.png" alt=""><span>SACOLA</span></div>
+        <div class="app-hero" style="background-image:url(assets/bmw-trio.jpg)"><div><small>Nova coleção</small><p>Motorsport<br>Edition</p><i>VER COLEÇÃO</i></div></div>
+        <div class="chips"><span>DESTAQUES</span><span>CAMISETAS</span><span>CONJUNTOS</span></div>
+        <div class="cards"><div style="background-image:url(assets/bmw-stripes.jpg)" data-n="BMW M Stripes"></div><div style="background-image:url(assets/jordan-circle.jpg)" data-n="Jumpman Circle"></div></div>
+      </div></div>
+      <div class="phone"><div class="isl"></div><div class="scr">
+        <div class="pdp-img" style="background-image:url(assets/jordan-set.jpg)"></div>
+        <div class="pdp"><small>Conjunto · Jordan</small><p>Jumpman Court Set</p>
+          <div class="sizes"><span>P</span><span>M</span><span>G</span><span>GG</span></div>
+          <div class="btn">ADICIONAR À SACOLA</div></div>
+      </div></div>
+    </div>
+  </div>
+  <div class="note">Prévia do MVP em desenvolvimento · conteúdo e produtos de teste</div>
+</section>
+
+<!-- 05 ESSENCIAL -->
+<section class="slide" id="s5">
+  <div class="top"><span><b>04</b> &nbsp; Solução 01</span><span>Plataforma Nuvemshop</span></div>
+  <div class="pkg">
+    <div>
+      <div class="num rise">01</div>
+      <h2 class="rise d1">Essencial<small>Sua loja pronta para começar.</small></h2>
+      <div class="meta rise d2"><span class="tag">Plataforma Nuvemshop</span><span class="tag">Implantação completa</span></div>
+      <div class="callout rise d3"><div><b>Autonomia desde o primeiro dia.</b> Você recebe as ferramentas e a orientação para administrar a rotina da loja por conta própria.</div></div>
+    </div>
+    <ul class="items rise d2">
+      <li>Implantação e configuração da loja virtual</li>
+      <li>Identidade visual personalizada nos recursos da plataforma</li>
+      <li>Organização da página inicial e das categorias</li>
+      <li>Cadastro inicial de produtos, com limite definido em contrato</li>
+      <li>Configuração dos meios de pagamento disponíveis</li>
+      <li>Configuração das modalidades de envio</li>
+      <li>Estruturação do painel de produtos e pedidos</li>
+      <li>Automações operacionais básicas compatíveis com os serviços contratados</li>
+      <li>Informações gerenciais e indicadores básicos</li>
+      <li>SEO técnico inicial</li>
+      <li>Treinamento para uso da plataforma</li>
+      <li>Orientação sobre produtos, estoque e pedidos</li>
+      <li>Testes antes da publicação</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 06 EXCLUSIVO -->
+<section class="slide" id="s6">
+  <div class="photo" style="background-image:url(assets/air-jordan-detail.jpg)"></div>
+  <div class="top"><span><b>05</b> &nbsp; Solução 02</span><span>Desenvolvimento próprio</span></div>
+  <div class="pkg">
+    <div>
+      <div class="num rise">02</div>
+      <h2 class="rise d1">Exclusivo<small>Uma experiência desenvolvida para sua marca.</small></h2>
+      <div class="meta rise d2"><span class="tag">Desenvolvido do zero</span><span class="tag">Escopo aprovado</span></div>
+      <p class="lead rise d3" style="margin-top:36px;font-size:21px">Mais liberdade de personalização e controle técnico — com infraestrutura e manutenção próprias.</p>
+    </div>
+    <div>
+      <ul class="items rise d2">
+        <li>Interface personalizada para a LC Imports</li>
+        <li>Arquitetura própria do e-commerce</li>
+        <li>Experiência mobile-first</li>
+        <li>Catálogo de produtos</li>
+        <li>Carrinho e checkout</li>
+        <li>Integração com provedor de pagamentos</li>
+        <li>Integração com cotação de fretes</li>
+        <li>Registro e acompanhamento de pedidos</li>
+        <li>Painel administrativo para operação básica</li>
+        <li>Controle de produtos e estoque</li>
+        <li>Notificações transacionais definidas no escopo</li>
+        <li>Recursos básicos de SEO técnico</li>
+        <li>Treinamento operacional</li>
+        <li>Base preparada para evoluções futuras</li>
+      </ul>
+      <p class="fine rise d3">Integrações sujeitas a homologação. Integrações adicionais, funcionalidades avançadas e desenvolvimentos fora do escopo são contratados à parte.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 TREINAMENTO -->
+<section class="slide" id="s7">
+  <div class="top"><span><b>06</b> &nbsp; Treinamento</span><span>LC Imports × Hoth Solutions</span></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow rise">Treinamento e autonomia</div>
+      <h2 class="rise d1">Você no controle <em>da sua operação.</em></h2>
+      <ol class="learn rise d2">
+        <li>Cadastrar e atualizar produtos</li>
+        <li>Atualizar preços</li>
+        <li>Acompanhar estoques</li>
+        <li>Consultar pedidos</li>
+        <li>Identificar a situação dos pagamentos</li>
+        <li>Acompanhar envios</li>
+        <li>Usar informações comerciais básicas</li>
+      </ol>
+      <p class="small rise d3" style="margin-top:30px;max-width:620px">A capacitação está incluída na entrega e reduz a dependência de terceiros para tarefas operacionais do dia a dia.</p>
+    </div>
+    <div class="dash rise d2">
+      <span class="badge">Ilustração conceitual</span>
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="row">
+        <div class="side"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div>
+          <div class="kpis"><div>Pedidos<b></b></div><div>Pagamentos<b></b></div><div>Envios<b></b></div></div>
+          <div class="tbl">
+            <div><em style="background-image:url(assets/bmw-colorblock.jpg)"></em><span></span><i></i><span></span></div>
+            <div><em style="background-image:url(assets/jordan-shorts.jpg)"></em><span style="width:70%"></span><i></i><span></span></div>
+            <div><em style="background-image:url(assets/air-jordan-grey.jpg)"></em><span style="width:85%"></span><i></i><span></span></div>
+            <div><em style="background-image:url(assets/bmw-m-back.jpg)"></em><span style="width:60%"></span><i></i><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 VISÃO DE NEGÓCIOS -->
+<section class="slide" id="s8">
+  <div class="top"><span><b>07</b> &nbsp; Gestão</span><span>LC Imports × Hoth Solutions</span></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow rise">Da operação à visão de negócios</div>
+      <h2 class="rise d1">Informação organizada. <em>Decisões mais conscientes.</em></h2>
+      <p class="lead rise d2" style="margin-top:40px">Configurações e automações gerenciais transformam a rotina em informação útil para acompanhar a loja.</p>
+      <p class="small rise d3" style="margin-top:40px;max-width:640px">Os relatórios e automações disponíveis dependem da plataforma escolhida e do escopo contratado.</p>
+    </div>
+    <div class="tiles rise d2">
+      <div><span>Pedidos</span><p>Acompanhamento de cada pedido</p></div>
+      <div><span>Catálogo</span><p>Produtos organizados e atualizados</p></div>
+      <div><span>Vendas</span><div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i style="height:74%"></i><i style="height:66%"></i></div><p>Visão básica de vendas</p></div>
+      <div><span>Saída</span><p>Produtos com maior saída</p></div>
+      <div><span>Rotina</span><p>Processos operacionais organizados</p></div>
+      <div><span>Indicadores</span><p>Métricas simples de acompanhamento</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 COMPARAÇÃO -->
+<section class="slide" id="s9">
+  <div class="top"><span><b>08</b> &nbsp; Comparação</span><span>LC Imports × Hoth Solutions</span></div>
+  <div style="margin-top:20px">
+    <h2 class="rise">Dois caminhos. <em>A escolha certa para o seu momento.</em></h2>
+  </div>
+  <table class="cmp rise d1">
+    <thead><tr><th></th><th><span class="s">Solução 01</span><span class="p">Essencial — Nuvemshop</span></th><th><span class="s">Solução 02</span><span class="p">Exclusivo — Desenvolvimento próprio</span></th></tr></thead>
+    <tbody>
+      <tr><td>Identidade visual personalizada</td><td><span class="ck">✓</span>Dentro dos recursos do tema</td><td><span class="ck">✓</span>Interface criada do zero</td></tr>
+      <tr><td>Catálogo e produtos</td><td><span class="ck">✓</span>Recursos nativos da plataforma</td><td><span class="ck">✓</span>Catálogo desenvolvido sob medida</td></tr>
+      <tr><td>Carrinho e pagamentos</td><td><span class="ck">✓</span>Checkout e meios da plataforma</td><td><span class="ck">✓</span>Checkout próprio + provedor integrado</td></tr>
+      <tr><td>Configuração de envios</td><td><span class="ck">✓</span>Modalidades da plataforma e apps</td><td><span class="ck">✓</span>Integração com cotação de fretes</td></tr>
+      <tr><td>Gestão de pedidos</td><td><span class="ck">✓</span>Painel consolidado da Nuvemshop</td><td><span class="ck">✓</span>Painel administrativo para operação básica</td></tr>
+      <tr><td>Treinamento</td><td><span class="ck">✓</span>Incluído</td><td><span class="ck">✓</span>Incluído</td></tr>
+      <tr><td>Automações básicas</td><td>Compatíveis com a plataforma e apps</td><td>Transacionais, definidas no escopo</td></tr>
+      <tr><td>Liberdade de personalização</td><td>Limitada aos recursos do tema</td><td>Ampla, conforme escopo aprovado</td></tr>
+      <tr><td>Estrutura tecnológica</td><td>Plataforma consolidada e mantida pela Nuvemshop</td><td>Arquitetura própria</td></tr>
+      <tr><td>Manutenção técnica</td><td>Infraestrutura sob responsabilidade da plataforma</td><td>Requer infraestrutura e manutenção próprias</td></tr>
+      <tr><td>Possibilidades de expansão</td><td>Loja de aplicativos da plataforma</td><td>Novas funcionalidades sob demanda</td></tr>
+      <tr class="fit"><td>Indicado para</td><td>Começar com praticidade e segurança</td><td>Quem busca personalização e controle técnico</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 10 INVESTIMENTO ESSENCIAL -->
+<section class="slide" id="s10">
+  <div class="top"><span><b>09</b> &nbsp; Investimento</span><span>Solução 01 · Essencial</span></div>
+  <div class="glow" style="width:900px;height:900px;right:0;top:80px;background:rgba(30,123,176,.2)"></div>
+  <div class="price">
+    <div>
+      <div class="eyebrow rise">Investimento</div>
+      <h2 class="rise d1">Comece com uma <em>estrutura profissional.</em></h2>
+      <div class="pk rise d2">Pacote<b>Essencial — Nuvemshop</b></div>
+      <p class="lead rise d3" style="margin-top:30px;font-size:21px">Você contrata implantação, personalização, configuração operacional e treinamento — não apenas uma página na internet.</p>
+      <div class="incl rise d3"><span class="tag">Implantação</span><span class="tag">Personalização</span><span class="tag">Configuração</span><span class="tag">Treinamento</span></div>
+    </div>
+    <div class="card rise d2">
+      <div class="l">Entrada</div>
+      <div class="big"><sup>R$</sup><span>300</span><sup>,00</sup></div>
+      <div class="plus">mais</div>
+      <div class="l">Parcelamento</div>
+      <div class="inst"><span class="x">12×</span><span class="v"><sup>R$</sup>141,67</span></div>
+      <div class="split">Valor parcelado: R$ 1.700,00 · 11 parcelas de R$ 141,67 e a última de R$ 141,63, para manter o total exato.</div>
+      <div class="total"><span>Investimento total</span><b>R$ 2.000,00</b></div>
+      <div class="fin">Não inclui assinatura da plataforma, domínio, taxas de pagamento e demais custos externos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 INVESTIMENTO EXCLUSIVO -->
+<section class="slide" id="s11">
+  <div class="top"><span><b>10</b> &nbsp; Investimento</span><span>Solução 02 · Exclusivo</span></div>
+  <div class="glow" style="width:900px;height:900px;left:-200px;top:200px;background:rgba(30,123,176,.16)"></div>
+  <div class="price" style="grid-template-columns:820px 1fr">
+    <div class="card rise d2">
+      <div class="l">Entrada</div>
+      <div class="big"><sup>R$</sup><span>500</span><sup>,00</sup></div>
+      <div class="plus">mais</div>
+      <div class="l">Parcelamento</div>
+      <div class="inst"><span class="x">12×</span><span class="v"><sup>R$</sup>208,33</span></div>
+      <div class="split">Valor parcelado: R$ 2.500,00 · 11 parcelas de R$ 208,33 e a última de R$ 208,37, para manter o total exato.</div>
+      <div class="total"><span>Investimento total</span><b>R$ 3.000,00</b></div>
+      <div class="fin">Não inclui domínio, hospedagem, taxas de pagamento e demais custos externos.</div>
+    </div>
+    <div>
+      <div class="eyebrow rise">Investimento</div>
+      <h2 class="rise d1">Mais liberdade para construir <em>sua presença digital.</em></h2>
+      <div class="pk rise d2">Pacote<b>Exclusivo — Desenvolvimento próprio</b></div>
+      <div class="incl rise d3"><span class="tag">Experiência personalizada</span><span class="tag">Arquitetura própria</span><span class="tag">Pagamentos e fretes integrados</span></div>
+      <p class="small rise d3" style="margin-top:30px">A entrega segue o escopo definido em conjunto e depende da homologação das integrações com os provedores escolhidos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 TRANSPARÊNCIA -->
+<section class="slide" id="s12">
+  <div class="top"><span><b>11</b> &nbsp; Transparência</span><span>LC Imports × Hoth Solutions</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:80px;margin-top:20px">
+    <div><div class="eyebrow rise">Transparência</div><h2 class="rise d1">Tudo definido <em>com clareza.</em></h2></div>
+    <p class="lead rise d2" style="max-width:640px;font-size:21px">O investimento corresponde aos serviços descritos em contrato. Os itens abaixo, quando necessários, são cobrados à parte.</p>
+  </div>
+  <div class="costs rise d2">
+    <div><span>01</span><p>Assinatura da Nuvemshop, se aplicável</p></div>
+    <div><span>02</span><p>Domínio e hospedagem</p></div>
+    <div><span>03</span><p>Taxas de intermediadores de pagamento</p></div>
+    <div><span>04</span><p>Serviços ou aplicativos pagos</p></div>
+    <div><span>05</span><p>Contratação de fretes</p></div>
+    <div><span>06</span><p>Produção profissional de fotos</p></div>
+    <div><span>07</span><p>Manutenção após o período de suporte</p></div>
+    <div class="ev"><span>08 · EVOLUÇÃO</span><p>Gestão de tráfego pago</p></div>
+    <div class="ev"><span>09 · EVOLUÇÃO</span><p>Verba de publicidade</p></div>
+    <div class="ev"><span>10 · EVOLUÇÃO</span><p>SEO contínuo</p></div>
+    <div class="ev"><span>11 · EVOLUÇÃO</span><p>Novas funcionalidades</p></div>
+    <div style="justify-content:center"><p style="font-family:var(--serif);font-style:italic;font-size:24px;color:var(--mute)">Sem surpresas. Cada custo é conversado antes.</p></div>
+  </div>
+  <div class="legend rise d3"><span><i></i>Custos externos ou operacionais</span><span><i class="ev"></i>Possibilidades de evolução futura, mediante contratação</span></div>
+</section>
+
+<!-- 13 PRÓXIMOS PASSOS -->
+<section class="slide" id="s13">
+  <div class="photo" style="background-image:url(assets/bmw-m-back.jpg)"></div>
+  <div class="top" style="position:absolute"><span><b>12</b> &nbsp; Próximos passos</span><span>LC Imports × Hoth Solutions</span></div>
+  <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:center">
+    <div class="eyebrow rise">Próximos passos</div>
+    <h2 class="rise d1" style="font-size:76px">O próximo capítulo da LC Imports <em>começa aqui.</em></h2>
+    <div class="steps rise d2">
+      <div><span>01</span><p>Escolha da solução</p></div>
+      <div><span>02</span><p>Reunião de alinhamento e definição do escopo</p></div>
+      <div><span>03</span><p>Desenvolvimento, configuração e homologação</p></div>
+      <div><span>04</span><p>Treinamento e publicação</p></div>
+    </div>
+    <div class="cta rise d3">
+      <h3>Vamos construir a próxima<br>fase da <em>LC Imports?</em></h3>
+      <div class="sig"><div class="n">Hoth Solutions</div><div class="t">Tecnologia, experiência e estrutura<br>para negócios digitais.</div></div>
+    </div>
+  </div>
+</section>
+
+</div></div>
+<div id="ui"><button id="prev" aria-label="Anterior">‹</button><span id="count">01 / 13</span><button id="next" aria-label="Próximo">›</button></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')],deck=document.getElementById('deck');
+let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));
+function fit(){deck.style.transform=`scale(${Math.min(innerWidth/1920,innerHeight/1080)})`}
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+  document.getElementById('count').textContent=String(i+1).padStart(2,'0')+' / '+slides.length;
+  document.getElementById('progress').style.width=((i+1)/slides.length*100)+'%';history.replaceState(null,'','#'+(i+1))}
+addEventListener('resize',fit);fit();show(i);
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))show(i+1);if(['ArrowLeft','PageUp'].includes(e.key))show(i-1);if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});
+document.getElementById('next').onclick=()=>show(i+1);document.getElementById('prev').onclick=()=>show(i-1);
+let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null});
+</script>
+</body>
+</html>
